@@ -10,7 +10,6 @@ import { LoginDTO } from './dto/login.dto';
 import { User, UserDocument } from './users.schema';
 import * as randomToken from 'random-token';
 
-
 @Injectable()
 export class UsersService {
   constructor(
