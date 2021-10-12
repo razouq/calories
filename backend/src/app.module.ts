@@ -6,8 +6,6 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { FoodsModule } from './foods/foods.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   imports: [
@@ -18,12 +16,6 @@ import { AuthGuard } from './guards/auth.guard';
     FoodsModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

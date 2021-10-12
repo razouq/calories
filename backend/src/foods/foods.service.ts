@@ -36,4 +36,22 @@ export class FoodsService {
       { $match: { sum: { $gt: currentUser.maxCalories } } },
     ]);
   }
+
+  async report() {
+    const date = new Date();
+    date.setHours(1, 0, 0, 0);
+    const lastDate = new Date(date);
+    lastDate.setDate(lastDate.getDate() - 14);
+    const result = {};
+    for (let d = date; d > lastDate; d.setDate(d.getDate() - 1)) {
+      // const calories = await this.foodsModel.aggregate([
+      //   { $match: { date: d } },
+      //   { $group: { _id: '$date', sum: { $sum: '$calories' } } },
+      // ]);
+      const count = await this.foodsModel.count({ date: d });
+      // if (calories.length) result[d.toDateString()] = calories[0].sum;
+      result[d.toDateString()] = count;
+    }
+    return result;
+  }
 }

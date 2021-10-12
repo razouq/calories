@@ -29,4 +29,10 @@ export class FoodsController {
   async listDaysWithExceededCalories(@CurrentUser() currentUser) {
     return this.foodsService.listDaysWithExceededCalories(currentUser);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('report')
+  async report() {
+    return this.foodsService.report();
+  }
 }
