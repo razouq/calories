@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { MailService } from 'src/mail/mail.service';
 import { AuthGuard } from './auth.guard';
@@ -6,6 +13,7 @@ import { CurrentUser } from './current-user.decorator';
 import { InviteFriendDTO } from './dto/invite-friend.dto';
 import { LoginDTO } from './dto/login.dto';
 import { UsersService } from './users.service';
+import * as randomToken from 'random-token';
 
 @Controller('users')
 export class UsersController {
@@ -34,7 +42,13 @@ export class UsersController {
     @Body() inviteFriendDTO: InviteFriendDTO,
     @CurrentUser() currentUser,
   ) {
-    this.mailService.sendInvitation(inviteFriendDTO, currentUser);
-    return inviteFriendDTO;
+    const password = randomToken(16);
+    const emailExists = await this.usersService.findOneByEmail(
+      inviteFriendDTO.email,
+    );
+    if (emailExists) throw new BadRequestException('email already a member');
+    await this.usersService.createInvitedUser(inviteFriendDTO, password);
+    this.mailService.sendInvitation(inviteFriendDTO, currentUser, password);
+    return { success: true };
   }
 }
