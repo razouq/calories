@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { MailService } from 'src/mail/mail.service';
-import { AuthGuard } from './auth.guard';
-import { CurrentUser } from './current-user.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUser } from '../decorators/current-user.decorator';
 import { InviteFriendDTO } from './dto/invite-friend.dto';
 import { LoginDTO } from './dto/login.dto';
 import { UsersService } from './users.service';
