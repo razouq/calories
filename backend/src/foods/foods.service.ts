@@ -19,4 +19,21 @@ export class FoodsService {
     const food = new this.foodsModel(foodBody);
     return await food.save();
   }
+
+  async listFoodsOfUser(currentUserId) {
+    return await this.foodsModel
+      .find({ owner: currentUserId })
+      .sort({ createdAt: -1 });
+  }
+
+  async listAllFoods() {
+    return await this.foodsModel.find().sort({ createdAt: -1 });
+  }
+
+  async listDaysWithExceededCalories(currentUser) {
+    return await this.foodsModel.aggregate([
+      { $group: { _id: '$date', sum: { $sum: '$calories' } } },
+      { $match: { sum: { $gt: currentUser.maxCalories } } },
+    ]);
+  }
 }
