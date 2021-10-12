@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
   Res,
   UseGuards,
@@ -50,5 +51,13 @@ export class UsersController {
     await this.usersService.createInvitedUser(inviteFriendDTO, password);
     this.mailService.sendInvitation(inviteFriendDTO, currentUser, password);
     return { success: true };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/me')
+  async me(@CurrentUser() currentUser) {
+    currentUser.password = undefined;
+    currentUser.token = undefined;
+    return currentUser;
   }
 }
