@@ -24,4 +24,8 @@ export class UsersService {
 
     return user;
   }
+
+  async findByToken(token: string) {
+    return this.usersModel.findOne({ token });
+  }
 }

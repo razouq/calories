@@ -1,6 +1,8 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { MailService } from 'src/mail/mail.service';
+import { AuthGuard } from './auth.guard';
+import { CurrentUser } from './current-user.decorator';
 import { InviteFriendDTO } from './dto/invite-friend.dto';
 import { LoginDTO } from './dto/login.dto';
 import { UsersService } from './users.service';
@@ -26,14 +28,13 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(AuthGuard)
   @Post('/invite-friend')
-  async inviteFriend(@Body() inviteFriendDTO: InviteFriendDTO) {
-    const currentUser = {
-      name: 'anass',
-    };
-
+  async inviteFriend(
+    @Body() inviteFriendDTO: InviteFriendDTO,
+    @CurrentUser() currentUser,
+  ) {
     this.mailService.sendInvitation(inviteFriendDTO, currentUser);
-
     return inviteFriendDTO;
   }
 }
