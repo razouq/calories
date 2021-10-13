@@ -13,8 +13,8 @@ import { join } from 'path';
         host: 'smtp.mailtrap.io',
         secure: false,
         auth: {
-          user: 'debe4250f95f7d',
-          pass: 'f0c29520146110',
+          user: '4d4da903178bfd',
+          pass: 'a7bc342d78d7bf',
         },
         port: 2525,
       },

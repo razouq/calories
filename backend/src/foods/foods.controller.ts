@@ -16,10 +16,24 @@ import { FoodsService } from './foods.service';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { Types } from 'mongoose';
 import { UpdateFoodDTO } from './dto/update-food.dto';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @Controller('foods')
 export class FoodsController {
   constructor(private foodsService: FoodsService) {}
+
+  @UseGuards(AdminGuard)
+  @UseGuards(AuthGuard)
+  @Get('report')
+  async report() {
+    return this.foodsService.report();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('exceeded-days')
+  async listDaysWithExceededCalories(@CurrentUser() currentUser) {
+    return this.foodsService.listDaysWithExceededCalories(currentUser);
+  }
 
   @UseGuards(AuthGuard)
   @Post()
@@ -71,17 +85,5 @@ export class FoodsController {
   async listFoods(@CurrentUser() currentUser) {
     if (currentUser.role === 'admin') return this.foodsService.listAllFoods();
     else return this.foodsService.listFoodsOfUser(currentUser._id);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('exceeded-days')
-  async listDaysWithExceededCalories(@CurrentUser() currentUser) {
-    return this.foodsService.listDaysWithExceededCalories(currentUser);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('report')
-  async report() {
-    return this.foodsService.report();
   }
 }
