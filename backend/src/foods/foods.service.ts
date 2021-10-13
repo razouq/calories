@@ -54,4 +54,8 @@ export class FoodsService {
     }
     return result;
   }
+
+  async getOneFood(id: string) {
+    return await this.foodsModel.findById(id);
+  }
 }

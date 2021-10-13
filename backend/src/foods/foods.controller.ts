@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '../guards/auth.guard';
 import { CreateFoodDTO } from './dto/create-food.dto';
 import { FoodsService } from './foods.service';
 import { CurrentUser } from '../decorators/current-user.decorator';
+import { Types } from 'mongoose';
 
 @Controller('foods')
 export class FoodsController {
@@ -15,6 +24,18 @@ export class FoodsController {
     @CurrentUser() CurrentUser,
   ) {
     return await this.foodsService.saveFood(createFoodDTO, CurrentUser);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get(':id')
+  async getOneFood(@Param('id') id: string) {
+    const validObjectId = Types.ObjectId.isValid(id);
+    if (!validObjectId) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+    const food = await this.foodsService.getOneFood(id);
+    if (!food) throw new BadRequestException('food not found');
+    return food;
   }
 
   @UseGuards(AuthGuard)
