@@ -28,12 +28,13 @@ export const listFoods = createAsyncThunk(
 );
 
 
-export const loginFood = createAsyncThunk(
-  'loginFood',
-  async (data: any, {rejectWithValue}) => {
+
+export const deleteFood = createAsyncThunk(
+  'deleteFood',
+  async (data: string, {rejectWithValue, dispatch}) => {
     try {
-      const response: AxiosResponse = await axios.post('http://localhost:5000/api/foods/login', data, {withCredentials: true});
-      return response.data;
+      await axios.delete(`http://localhost:5000/api/foods/${data}`, {withCredentials: true});
+      dispatch(listFoods());
     } catch(e) {
       return rejectWithValue(null);
     }
@@ -54,6 +55,11 @@ const foodsSlice = createSlice({
       state.foods = action.payload as [];
     });
 
+    builder.addCase(deleteFood.fulfilled, (state, action) => {
+    });
+
+    builder.addCase(deleteFood.rejected, (state, action) => {
+    });
   },
 });
 

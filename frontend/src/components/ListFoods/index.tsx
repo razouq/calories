@@ -19,6 +19,7 @@ import {
 // import DeleteFoodPopUp from '../DeleteFoodPopUp';
 // import UpdateFoodPopUp from '../UpdateFoodPopUp';
 import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import DeleteFoodPopUp from '../DeleteFoodPopUp';
 
 
 function createData(
@@ -79,7 +80,6 @@ const ListFoods: FC = () => {
                 >
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">{row.calories}</TableCell>
-                  {/* <TableCell align="center">{format(new Date(row.date), 'dd/MM/yyyy')}</TableCell> */}
                   <TableCell align="center">{formatDistance(new Date(row.date), new Date(), { addSuffix: true })}</TableCell>
                   <TableCell align="center">
                     <ShowButton variant="outlined">
@@ -104,14 +104,14 @@ const ListFoods: FC = () => {
           </Table>
         </TableContainer>
       </StyledContainer>
-      {/* {showDeleteStudentPopup && (
-        <DeleteStudentPopUp
-          studentId={studentId}
+      {showDeleteStudentPopup && (
+        <DeleteFoodPopUp
+          foodId={foodId}
           open={showDeleteStudentPopup}
           handleClose={() => setShowDeleteStudentPopup(false)}
         />
       )}
-      {showUpdateStudentPopup && (
+      {/* {showUpdateStudentPopup && (
         <UpdateStudentPopUp
           studentId={studentId}
           open={showUpdateStudentPopup}

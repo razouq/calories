@@ -4,6 +4,7 @@ import Login from './components/Login';
 import history from './history';
 import { Container } from './style';
 import ListFoods from './components/ListFoods';
+import ShowFood from './components/ShowFood';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/" component={ListFoods} />
+          <Route exact path="/foods/:id" component={ShowFood} />
         </Switch>
       </Container>
     </Router>
