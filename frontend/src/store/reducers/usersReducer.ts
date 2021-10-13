@@ -30,6 +30,7 @@ export const loginUser = createAsyncThunk(
   async (data: any, {rejectWithValue}) => {
     try {
       const response: AxiosResponse = await axios.post('http://localhost:5000/api/users/login', data, {withCredentials: true});
+      history.push('/');
       return response.data;
     } catch(e) {
       return rejectWithValue(null);
@@ -53,7 +54,6 @@ const usersSlice = createSlice({
 
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.user = action.payload;
-      history.push('/');
     });
 
     builder.addCase(loginUser.rejected, (state, action) => {

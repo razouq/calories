@@ -81,7 +81,7 @@ const ListFoods: FC = () => {
                 >
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">{row.calories}</TableCell>
-                  <TableCell align="center">{formatDistance(new Date(row.date), new Date(), { addSuffix: true })}</TableCell>
+                  <TableCell align="center">{format(new Date(row.date), 'dd/MM/yyyy')}</TableCell>
                   <TableCell align="center">
                     <ShowButton variant="outlined">
                       <StyledLink to={`/foods/${row._id}`}>Show</StyledLink>

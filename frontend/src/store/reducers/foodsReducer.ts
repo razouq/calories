@@ -56,12 +56,34 @@ export const updateFood = createAsyncThunk(
   }
 );
 
+export const createFood = createAsyncThunk(
+  'createFood',
+  async (data: any, {rejectWithValue}) => {
+    try {
+      data.calories = parseInt(data.calories);
+      console.log(data);
+      const response = await axios.post('http://localhost:5000/api/foods', data, {withCredentials: true});
+      history.push('/');
+      return response.data
+    } catch(e) {
+      return rejectWithValue(false);
+    }
+  }
+);
+
 
 const foodsSlice = createSlice({
   name: 'foods',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+
+    builder.addCase(createFood.fulfilled, (state, action) => {
+    });
+
+    builder.addCase(createFood.rejected, (state, action) => {
+    });
+
     builder.addCase(listFoods.fulfilled, (state, action) => {
       state.foods = _.mapKeys(action.payload as [], '_id');
     });
