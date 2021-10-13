@@ -18,8 +18,9 @@ import {
 } from './style';
 // import DeleteFoodPopUp from '../DeleteFoodPopUp';
 // import UpdateFoodPopUp from '../UpdateFoodPopUp';
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import { format, formatDistance } from 'date-fns'
 import DeleteFoodPopUp from '../DeleteFoodPopUp';
+import UpdateFoodPopUp from '../UpdateFoodPopUp';
 
 
 function createData(
@@ -45,18 +46,18 @@ const ListFoods: FC = () => {
   );
 
   const [foodId, setFoodId] = useState<string>('');
-  const [showDeleteStudentPopup, setShowDeleteStudentPopup] = useState(false);
-  const [showUpdateStudentPopup, setShowUpdateStudentPopup] = useState(false);
+  const [showDeleteFoodPopup, setShowDeleteFoodPopup] = useState(false);
+  const [showUpdateFoodPopup, setShowUpdateFoodPopup] = useState(false);
 
   const onClickDelete = (id: string) => {
     setFoodId(id);
-    setShowDeleteStudentPopup(true);
+    setShowDeleteFoodPopup(true);
   };
 
   const onClickUpdate = (id: string) => {
     ('update');
     setFoodId(id);
-    setShowUpdateStudentPopup(true);
+    setShowUpdateFoodPopup(true);
   };
 
   return (
@@ -104,20 +105,20 @@ const ListFoods: FC = () => {
           </Table>
         </TableContainer>
       </StyledContainer>
-      {showDeleteStudentPopup && (
+      {showDeleteFoodPopup && (
         <DeleteFoodPopUp
           foodId={foodId}
-          open={showDeleteStudentPopup}
-          handleClose={() => setShowDeleteStudentPopup(false)}
+          open={showDeleteFoodPopup}
+          handleClose={() => setShowDeleteFoodPopup(false)}
         />
       )}
-      {/* {showUpdateStudentPopup && (
-        <UpdateStudentPopUp
-          studentId={studentId}
-          open={showUpdateStudentPopup}
-          handleClose={() => setShowUpdateStudentPopup(false)}
+      {showUpdateFoodPopup && (
+        <UpdateFoodPopUp
+          foodId={foodId}
+          open={showUpdateFoodPopup}
+          handleClose={() => setShowUpdateFoodPopup(false)}
         />
-      )} */}
+      )}
     </>
   );
 };

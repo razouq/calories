@@ -41,6 +41,21 @@ export const deleteFood = createAsyncThunk(
   }
 );
 
+export const updateFood = createAsyncThunk(
+  'updateFood',
+  async (data: any, {rejectWithValue, dispatch}) => {
+    try {
+      const { _id, ...newData } = data;
+      newData.calories = parseInt(newData.calories);
+      const response= await axios.put(`http://localhost:5000/api/foods/${_id}`, newData, {withCredentials: true});
+      dispatch(listFoods());
+      return response.data
+    } catch(e) {
+      return rejectWithValue(false);
+    }
+  }
+);
+
 
 const foodsSlice = createSlice({
   name: 'foods',
