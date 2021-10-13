@@ -60,6 +60,33 @@ export class FoodsService {
     return result;
   }
 
+  async averageLastWeek(id: string) {
+    const beforeWeekDate = new Date();
+    beforeWeekDate.setDate(beforeWeekDate.getDate() - 7);
+    const calories = await this.foodsModel.aggregate([
+      [
+        {
+          $match: {
+            date: {
+              $gte: beforeWeekDate,
+            },
+            owner: id,
+          },
+        },
+        {
+          $group: {
+            _id: '$owner',
+            sum: {
+              $sum: '$calories',
+            },
+          },
+        },
+      ],
+    ]);
+    if (calories.length) return calories[0].sum / 7;
+    return 0;
+  }
+
   async getOneFood(id: string) {
     return await this.foodsModel.findById(id);
   }

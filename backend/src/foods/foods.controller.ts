@@ -35,6 +35,13 @@ export class FoodsController {
     return this.foodsService.listDaysWithExceededCalories(currentUser);
   }
 
+  @UseGuards(AdminGuard)
+  @UseGuards(AuthGuard)
+  @Get('average-last-week')
+  async averageLastWeek(@CurrentUser() currentUser) {
+    return this.foodsService.averageLastWeek(currentUser._id);
+  }
+
   @UseGuards(AuthGuard)
   @Post()
   async createFood(
@@ -44,6 +51,7 @@ export class FoodsController {
     return await this.foodsService.saveFood(createFoodDTO, CurrentUser);
   }
 
+  @UseGuards(AdminGuard)
   @UseGuards(AuthGuard)
   @Get(':id')
   async getFood(@Param('id') id: string) {
@@ -56,6 +64,7 @@ export class FoodsController {
     return food;
   }
 
+  @UseGuards(AdminGuard)
   @UseGuards(AuthGuard)
   @Put(':id')
   async updateFood(
@@ -69,6 +78,7 @@ export class FoodsController {
     return await this.foodsService.updateFood(updateFoodDTO, id);
   }
 
+  @UseGuards(AdminGuard)
   @UseGuards(AuthGuard)
   @Delete(':id')
   @HttpCode(204)
