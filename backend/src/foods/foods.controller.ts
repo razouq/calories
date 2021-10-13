@@ -2,9 +2,12 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../guards/auth.guard';
@@ -12,6 +15,7 @@ import { CreateFoodDTO } from './dto/create-food.dto';
 import { FoodsService } from './foods.service';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { Types } from 'mongoose';
+import { UpdateFoodDTO } from './dto/update-food.dto';
 
 @Controller('foods')
 export class FoodsController {
@@ -28,7 +32,7 @@ export class FoodsController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  async getOneFood(@Param('id') id: string) {
+  async getFood(@Param('id') id: string) {
     const validObjectId = Types.ObjectId.isValid(id);
     if (!validObjectId) {
       throw new BadRequestException('Invalid ObjectId');
@@ -36,6 +40,30 @@ export class FoodsController {
     const food = await this.foodsService.getOneFood(id);
     if (!food) throw new BadRequestException('food not found');
     return food;
+  }
+
+  @UseGuards(AuthGuard)
+  @Put(':id')
+  async updateFood(
+    @Body() updateFoodDTO: UpdateFoodDTO,
+    @Param('id') id: string,
+  ) {
+    const validObjectId = Types.ObjectId.isValid(id);
+    if (!validObjectId) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+    return await this.foodsService.updateFood(updateFoodDTO, id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteFood(@Param('id') id: string) {
+    const validObjectId = Types.ObjectId.isValid(id);
+    if (!validObjectId) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+    return await this.foodsService.deleteFood(id);
   }
 
   @UseGuards(AuthGuard)

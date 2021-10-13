@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateFoodDTO } from './dto/create-food.dto';
+import { UpdateFoodDTO } from './dto/update-food.dto';
 import { Food, FoodDocument } from './foods.schema';
 
 @Injectable()
@@ -57,5 +62,18 @@ export class FoodsService {
 
   async getOneFood(id: string) {
     return await this.foodsModel.findById(id);
+  }
+
+  async updateFood(updateFoodDTO: UpdateFoodDTO, id: string) {
+    const food = await this.foodsModel.findById(id);
+    if (!food) throw new NotFoundException('food not found');
+    food.name = updateFoodDTO.name;
+    food.calories = updateFoodDTO.calories;
+    food.date = updateFoodDTO.date;
+    return await food.save();
+  }
+
+  async deleteFood(id: string) {
+    return await this.foodsModel.deleteOne({ _id: id });
   }
 }
