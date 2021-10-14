@@ -57,12 +57,9 @@ const usersSlice = createSlice({
     });
 
     builder.addCase(loginUser.rejected, (state, action) => {
-      console.log('login rejected');
     });
 
   },
 });
-
-// export const { fetchSuccess, fetchError } = usersSlice.actions;
 
 export default usersSlice.reducer;

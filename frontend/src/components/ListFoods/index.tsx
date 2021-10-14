@@ -39,7 +39,6 @@ const ListFoods: FC = () => {
   );
 
   const currentUser = useSelector((state: RootState) => state.users.user);
-  console.log(currentUser);
 
   const [foodId, setFoodId] = useState<string>('');
   const [showDeleteFoodPopup, setShowDeleteFoodPopup] = useState(false);

@@ -43,7 +43,6 @@ const CreateFood: FC = () => {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     dispatch(createFood(data));
   };
 

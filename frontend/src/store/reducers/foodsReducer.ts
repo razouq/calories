@@ -61,7 +61,6 @@ export const createFood = createAsyncThunk(
   async (data: any, {rejectWithValue}) => {
     try {
       data.calories = parseInt(data.calories);
-      console.log(data);
       const response = await axios.post('http://localhost:5000/api/foods', data, {withCredentials: true});
       history.push('/');
       return response.data

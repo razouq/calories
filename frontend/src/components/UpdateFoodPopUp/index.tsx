@@ -46,7 +46,6 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
   const dispatch = useDispatch();
 
   const onSubmit = (values: any) => {
-    console.log('values', values);
     dispatch(updateFood({ ...values, _id: food._id }));
     handleClose();
   };

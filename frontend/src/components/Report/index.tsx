@@ -14,7 +14,6 @@ const Report: FC = () => {
         { withCredentials: true }
       );
       setDays(response.data as {});
-      console.log(response.data);
     };
     getReport();
   }, []);
