@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class InviteFriendDTO {
   @IsNotEmpty()
-  receiverName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsEmail()

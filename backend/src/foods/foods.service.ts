@@ -28,11 +28,11 @@ export class FoodsService {
   async listFoodsOfUser(currentUserId) {
     return await this.foodsModel
       .find({ owner: currentUserId })
-      .sort({ createdAt: -1 });
+      .sort({ date: -1 });
   }
 
   async listAllFoods() {
-    return await this.foodsModel.find().sort({ createdAt: -1 });
+    return await this.foodsModel.find().sort({ date: -1 });
   }
 
   async listDaysWithExceededCalories(currentUser) {
@@ -70,7 +70,6 @@ export class FoodsService {
             date: {
               $gte: beforeWeekDate,
             },
-            owner: id,
           },
         },
         {
@@ -81,10 +80,31 @@ export class FoodsService {
             },
           },
         },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'owner',
+          },
+        },
+        {
+          $unwind: {
+            path: '$owner',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: '$owner.name',
+            averageCalories: {
+              $divide: ['$sum', 7],
+            },
+          },
+        },
       ],
     ]);
-    if (calories.length) return calories[0].sum / 7;
-    return 0;
+    return calories;
   }
 
   async getOneFood(id: string) {

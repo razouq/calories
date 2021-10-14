@@ -16,7 +16,7 @@ export class MailService {
       subject: 'Welcome to Calories App!',
       template: './invitation',
       context: {
-        receiverName: inviteFriendDTO.receiverName,
+        receiverName: inviteFriendDTO.name,
         senderName: currentUser.name,
         password,
       },
