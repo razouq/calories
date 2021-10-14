@@ -18,17 +18,11 @@ import {
 } from './style';
 // import DeleteFoodPopUp from '../DeleteFoodPopUp';
 // import UpdateFoodPopUp from '../UpdateFoodPopUp';
-import { format, formatDistance } from 'date-fns'
+import { format, formatDistance } from 'date-fns';
 import DeleteFoodPopUp from '../DeleteFoodPopUp';
 import UpdateFoodPopUp from '../UpdateFoodPopUp';
 
-
-function createData(
-  _id: string,
-  name: string,
-  calories: number,
-  date: Date,
-) {
+function createData(_id: string, name: string, calories: number, date: Date) {
   return { _id, name, calories, date };
 }
 
@@ -40,10 +34,12 @@ const ListFoods: FC = () => {
   useEffect(() => {
     dispatch(listFoods());
   }, [dispatch]);
-  const rows = foods.map(
-    ({ _id, name, calories, date }) =>
-      createData(_id, name, calories, date)
+  const rows = foods.map(({ _id, name, calories, date }) =>
+    createData(_id, name, calories, date)
   );
+
+  const currentUser = useSelector((state: RootState) => state.users.user);
+  console.log(currentUser);
 
   const [foodId, setFoodId] = useState<string>('');
   const [showDeleteFoodPopup, setShowDeleteFoodPopup] = useState(false);
@@ -70,7 +66,9 @@ const ListFoods: FC = () => {
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Calories</TableCell>
                 <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                {currentUser?.role === 'admin' && (
+                  <TableCell align="center">Actions</TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -81,24 +79,28 @@ const ListFoods: FC = () => {
                 >
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">{row.calories}</TableCell>
-                  <TableCell align="center">{format(new Date(row.date), 'dd/MM/yyyy')}</TableCell>
                   <TableCell align="center">
-                    <ShowButton variant="outlined">
-                      <StyledLink to={`/foods/${row._id}`}>Show</StyledLink>
-                    </ShowButton>
-                    <UpdateButton
-                      variant="outlined"
-                      onClick={() => onClickUpdate(row._id)}
-                    >
-                      Update
-                    </UpdateButton>
-                    <DeleteButton
-                      variant="outlined"
-                      onClick={() => onClickDelete(row._id)}
-                    >
-                      Delete
-                    </DeleteButton>
+                    {format(new Date(row.date), 'dd/MM/yyyy')}
                   </TableCell>
+                  {currentUser?.role === 'admin' && (
+                    <TableCell align="center">
+                      <ShowButton variant="outlined">
+                        <StyledLink to={`/foods/${row._id}`}>Show</StyledLink>
+                      </ShowButton>
+                      <UpdateButton
+                        variant="outlined"
+                        onClick={() => onClickUpdate(row._id)}
+                      >
+                        Update
+                      </UpdateButton>
+                      <DeleteButton
+                        variant="outlined"
+                        onClick={() => onClickDelete(row._id)}
+                      >
+                        Delete
+                      </DeleteButton>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

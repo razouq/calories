@@ -14,6 +14,20 @@ import {
   StyledTextField,
   DatePickerWrapper,
 } from './style';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup
+  .object()
+  .shape({
+    name: yup.string().required(),
+    calories: yup
+      .number()
+      .positive('calories must be a positive number')
+      .required(),
+    date: yup.date().required(),
+  })
+  .required();
 
 interface UpdateFoodPopUpProps {
   foodId: string;
@@ -37,12 +51,21 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
     handleClose();
   };
 
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      name: food.name,
-      calories: food.calories,
-      date: food.date,
-    },
+  const initialValues = {
+    name: food.name,
+    calories: food.calories,
+    date: food.date,
+  };
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    defaultValues: initialValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
 
   return (
@@ -62,6 +85,8 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
             label="Name"
             variant="outlined"
             fullWidth
+            error={!!errors.name}
+            helperText={errors.name && errors?.name?.message}
           />
           <StyledTextField
             {...register('calories')}
@@ -69,6 +94,8 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
             variant="outlined"
             fullWidth
             type="number"
+            error={!!errors.calories}
+            helperText={errors.calories && errors?.calories?.message}
           />
           <Controller
             name="date"
@@ -80,7 +107,12 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
                     {...field}
                     label="Birth Date"
                     renderInput={(params) => (
-                      <TextField fullWidth {...params} />
+                      <TextField
+                        fullWidth
+                        {...params}
+                        error={!!errors.date}
+                        helperText={errors.date && errors?.date?.message}
+                      />
                     )}
                   />
                 </DatePickerWrapper>
