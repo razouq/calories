@@ -13,6 +13,7 @@ import { fetchCurrentUser } from './store/reducers/usersReducer';
 import InviteFriend from './components/InviteFriend/Index';
 import AdminRoute from './Routes/AdminRoute';
 import UserRoute from './Routes/UserRoute';
+import NotFound from './components/NotFound';
 
 function App() {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ function App() {
           <UserRoute exact path="/" component={ListFoods} />
           <UserRoute exact path="/create-food" component={CreateFood} />
           <AdminRoute exact path="/foods/:id" component={ShowFood} />
+          <Route component={NotFound} />
         </Switch>
       </Container>
     </Router>
