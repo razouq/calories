@@ -1,6 +1,5 @@
 import { FC, useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { format } from 'date-fns';
 import {
   Paper,
   Table,

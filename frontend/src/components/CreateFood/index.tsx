@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Container } from '@mui/material';
-import { DatePickerWrapper, StyledTextField } from './style';
+import { DatePickerWrapper, ServerError, ServerErrorsList, StyledTextField } from './style';
 import { createFood } from '../../store/reducers/foodsReducer';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -10,6 +10,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { cleanErrors } from '../../store/reducers/serverReducer';
+import { RootState } from '../../store';
 
 const schema = yup
   .object()
@@ -31,6 +33,7 @@ const initialValues = {
 
 const CreateFood: FC = () => {
   const dispatch = useDispatch();
+  
   const {
     register,
     handleSubmit,

@@ -1,10 +1,19 @@
-import { FC } from 'react';
-import { StyledPaper, StyledTextField, Title, StyledButton } from './style';
+import { FC, useEffect } from 'react';
+import {
+  StyledPaper,
+  StyledTextField,
+  Title,
+  StyledButton,
+  ServerErrorsList,
+  ServerError,
+} from './style';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { inviteFriend } from '../../store/reducers/usersReducer';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { RootState } from '../../store';
+import { cleanErrors } from '../../store/reducers/serverReducer';
 
 const schema = yup
   .object()
@@ -32,8 +41,21 @@ const InviteFriend: FC = () => {
   });
   const onSubmit = (data: any) => {
     dispatch(inviteFriend(data));
-    console.log(data)
+    console.log(data);
   };
+  const serverErrors = useSelector((state: RootState) => state.server.errors);
+  const renderServerErrors = () => {
+    return (
+      <ServerErrorsList>
+        {serverErrors.map((error) => (
+          <ServerError>{error}</ServerError>
+        ))}
+      </ServerErrorsList>
+    );
+  };
+  useEffect(() => {
+    dispatch(cleanErrors());
+  }, [dispatch]);
   return (
     <StyledPaper elevation={3}>
       <Title>Invite Friend</Title>
@@ -55,7 +77,7 @@ const InviteFriend: FC = () => {
           error={!!errors.email}
           helperText={errors.email && errors?.email?.message}
         />
-
+        {serverErrors.length ? renderServerErrors() : null}
         <StyledButton type="submit" variant="contained">
           Invite
         </StyledButton>

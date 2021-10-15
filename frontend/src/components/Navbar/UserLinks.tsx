@@ -20,6 +20,9 @@ const UserLinks: FC = () => {
       <Button color="inherit">
         <StyledLink to="/invite-friend">Invite Friend</StyledLink>
       </Button>
+      <Button color="inherit">
+        <StyledLink to="/exceeded-days">Exceeded Days</StyledLink>
+      </Button>
       {/* <Button color="inherit" onClick={onClickLogout}>
         Logout
       </Button> */}

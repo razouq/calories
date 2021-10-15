@@ -19,3 +19,8 @@ export const Title = styled.h1`
 export const StyledButton = styled(Button)`
   margin: 1rem;
 `;
+
+export const ServerErrorsList = styled.ul``;
+export const ServerError = styled.li`
+  color: red;
+`;

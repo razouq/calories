@@ -1,10 +1,19 @@
-import { FC } from 'react';
-import { StyledPaper, StyledTextField, Title, StyledButton } from './style';
+import { FC, useEffect } from 'react';
+import {
+  StyledPaper,
+  StyledTextField,
+  Title,
+  StyledButton,
+  ServerErrorsList,
+  ServerError,
+} from './style';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../store/reducers/usersReducer';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { RootState } from '../../store';
+import { cleanErrors } from '../../store/reducers/serverReducer';
 
 const schema = yup
   .object()
@@ -24,6 +33,9 @@ const initialValues = {
 
 const Login: FC = () => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(cleanErrors());
+  }, [])
   const {
     register,
     handleSubmit,
@@ -35,6 +47,16 @@ const Login: FC = () => {
   });
   const onSubmit = (data: any) => {
     dispatch(loginUser(data));
+  };
+  const serverErrors = useSelector((state: RootState) => state.server.errors);
+  const renderServerErrors = () => {
+    return (
+      <ServerErrorsList>
+        {serverErrors.map((error) => (
+          <ServerError>{error}</ServerError>
+        ))}
+      </ServerErrorsList>
+    );
   };
   return (
     <StyledPaper elevation={3}>
@@ -57,6 +79,8 @@ const Login: FC = () => {
           error={!!errors.password}
           helperText={errors.password && errors?.password?.message}
         />
+        {serverErrors.length ? renderServerErrors() : null}
+
         <StyledButton type="submit" variant="contained">
           Login
         </StyledButton>

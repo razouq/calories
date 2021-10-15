@@ -14,6 +14,7 @@ import InviteFriend from './components/InviteFriend/Index';
 import AdminRoute from './Routes/AdminRoute';
 import UserRoute from './Routes/UserRoute';
 import NotFound from './components/NotFound';
+import ExceededDays from './components/ExceededDays';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <AdminRoute exact path="/report" component={Report} />
+          <AdminRoute exact path="/exceeded-days" component={ExceededDays} />
           <UserRoute exact path="/invite-friend" component={InviteFriend} />
           <UserRoute exact path="/" component={ListFoods} />
           <UserRoute exact path="/create-food" component={CreateFood} />

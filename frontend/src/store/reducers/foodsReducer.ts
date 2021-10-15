@@ -58,13 +58,13 @@ export const updateFood = createAsyncThunk(
 
 export const createFood = createAsyncThunk(
   'createFood',
-  async (data: any, {rejectWithValue}) => {
+  async (data: any, {rejectWithValue, dispatch}) => {
     try {
       data.calories = parseInt(data.calories);
       const response = await axios.post('http://localhost:5000/api/foods', data, {withCredentials: true});
       history.push('/');
       return response.data
-    } catch(e) {
+    } catch(e: any) {
       return rejectWithValue(false);
     }
   }
