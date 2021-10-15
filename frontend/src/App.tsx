@@ -10,6 +10,9 @@ import CreateFood from './components/CreateFood';
 import Report from './components/Report';
 import { useDispatch } from 'react-redux';
 import { fetchCurrentUser } from './store/reducers/usersReducer';
+import InviteFriend from './components/InviteFriend/Index';
+import AdminRoute from './Routes/AdminRoute';
+import UserRoute from './Routes/UserRoute';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,10 +25,11 @@ function App() {
       <Container>
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/report" component={Report} />
-          <Route exact path="/" component={ListFoods} />
-          <Route exact path="/create-food" component={CreateFood} />
-          <Route exact path="/foods/:id" component={ShowFood} />
+          <AdminRoute exact path="/report" component={Report} />
+          <UserRoute exact path="/invite-friend" component={InviteFriend} />
+          <UserRoute exact path="/" component={ListFoods} />
+          <UserRoute exact path="/create-food" component={CreateFood} />
+          <AdminRoute exact path="/foods/:id" component={ShowFood} />
         </Switch>
       </Container>
     </Router>

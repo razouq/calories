@@ -16,9 +16,7 @@ import {
   ShowButton,
   StyledLink,
 } from './style';
-// import DeleteFoodPopUp from '../DeleteFoodPopUp';
-// import UpdateFoodPopUp from '../UpdateFoodPopUp';
-import { format, formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import DeleteFoodPopUp from '../DeleteFoodPopUp';
 import UpdateFoodPopUp from '../UpdateFoodPopUp';
 

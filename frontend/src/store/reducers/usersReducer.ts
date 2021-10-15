@@ -38,6 +38,19 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const inviteFriend = createAsyncThunk(
+  'inviteFriend',
+  async (data: any, {rejectWithValue}) => {
+    try {
+      const response: AxiosResponse = await axios.post('http://localhost:5000/api/users/invite-friend', data, {withCredentials: true});
+      history.push('/');
+      console.log(response.data);
+      return response.data;
+    } catch(e) {
+      return rejectWithValue(null);
+    }
+  }
+);
 
 const usersSlice = createSlice({
   name: 'users',
@@ -57,6 +70,12 @@ const usersSlice = createSlice({
     });
 
     builder.addCase(loginUser.rejected, (state, action) => {
+    });
+
+    builder.addCase(inviteFriend.fulfilled, (state, action) => {
+    });
+
+    builder.addCase(inviteFriend.rejected, (state, action) => {
     });
 
   },
