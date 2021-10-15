@@ -17,6 +17,8 @@ export class FoodsService {
   ) {}
 
   async saveFood(createFoodDTO: CreateFoodDTO, currentUser) {
+    createFoodDTO.date = new Date(createFoodDTO.date);
+    createFoodDTO.date.setHours(0, 0, 0, 0);
     const foodBody = {
       ...createFoodDTO,
       owner: currentUser._id,
@@ -44,7 +46,7 @@ export class FoodsService {
 
   async report() {
     const date = new Date();
-    date.setHours(1, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
     const lastDate = new Date(date);
     lastDate.setDate(lastDate.getDate() - 14);
     const result = {};
