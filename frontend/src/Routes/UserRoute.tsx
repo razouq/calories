@@ -6,7 +6,7 @@ import { RouteProps } from 'react-router';
 
 const AdminRoute: FC<RouteProps> = (props) => {
   const currentUser = useSelector((state: RootState) => state.users.user);
-  const isUser = currentUser?.role === 'user';
+  const isUser = currentUser?.role === 'user' || 'admin';
 
   return isUser ? <Route {...props} /> : <Redirect to="/login" />
 };
