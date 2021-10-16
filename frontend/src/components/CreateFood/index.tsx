@@ -23,7 +23,7 @@ const schema = yup
     calories: yup
       .number()
       .positive('calories must be a positive number')
-      .required(),
+      .required('calories is required!'),
     date: yup.date().required(),
   })
   .required();
@@ -43,6 +43,8 @@ const CreateFood: FC = () => {
     control,
     formState: { errors },
     setValue,
+    setError,
+    clearErrors,
   } = useForm({
     defaultValues: initialValues,
     mode: 'onChange',
@@ -53,8 +55,6 @@ const CreateFood: FC = () => {
     dispatch(createFood(data));
   };
 
-
-
   const [term, setTerm] = useState('');
   const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
@@ -63,7 +63,6 @@ const CreateFood: FC = () => {
     const timerId = setTimeout(() => {
       setDebouncedTerm(term);
     }, 1000);
-    console.log('changed term');
 
     return () => {
       clearTimeout(timerId);
@@ -84,46 +83,61 @@ const CreateFood: FC = () => {
       );
 
       // @ts-ignore: Unreachable code error
-      console.log(response.data.branded )
-      // @ts-ignore: Unreachable code error
       setResults(response.data.branded as []);
     };
     if (term !== '') search();
-    
   }, [debouncedTerm]);
 
   return (
     <Container>
       <h1>Create Food</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={results.map((result: any) => result?.food_name)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Movie"
-              value={term}
-              onChange={(e: any) => {console.log(e.target.value); setTerm(e.target.value)}}
+        <Controller
+          name="name"
+          control={control}
+          render={(field) => (
+            <Autocomplete
+              {...field}
+              disablePortal
+              id="combo-box-demo"
+              options={results.map((result: any) => result?.food_name)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Name"
+                  value={term}
+                  onChange={(e: any) => {
+                    setTerm(e.target.value);
+                    setValue('name', e.target.value);
+                  }}
+                  error={!!errors.name}
+                  helperText={errors.name && errors?.name?.message}
+                  required
+                />
+              )}
+              freeSolo
+              onInputChange={(event, value) => {
+                setValue('name', value);
+                if (value === '') {
+                  setError('name', {
+                    type: 'manual',
+                    message: 'name is require!',
+                  });
+                } else {
+                  clearErrors(['name']);
+                }
+                const food = results.find(
+                  (result: any) => result?.food_name === value
+                );
+                if (food) {
+                  // @ts-ignore: Unreachable code error
+                  setValue('calories', food?.nf_calories);
+                  clearErrors(['calories'])
+                }
+                return value;
+              }}
             />
           )}
-          freeSolo
-          onChange={(event, value) => {
-            console.log(value)
-            const food = results.find((result: any) => result?.food_name === value);
-            console.log(food)
-            // @ts-ignore: Unreachable code error
-            if(food) setValue('calories', food?.nf_calories)
-          }}
-        />
-        <StyledTextField
-          {...register('name')}
-          label="Name"
-          variant="outlined"
-          fullWidth
-          error={!!errors.name}
-          helperText={errors.name && errors?.name?.message}
         />
         <StyledTextField
           {...register('calories')}

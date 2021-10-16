@@ -1,7 +1,7 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { Modal, TextField, Typography } from '@mui/material';
-import { FC } from 'react';
+import { Autocomplete, Modal, TextField, Typography } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateFood } from '../../store/reducers/foodsReducer';
@@ -16,6 +16,7 @@ import {
 } from './style';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import axios, { AxiosResponse } from 'axios';
 
 const schema = yup
   .object()
@@ -46,8 +47,9 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
   const dispatch = useDispatch();
 
   const onSubmit = (values: any) => {
-    dispatch(updateFood({ ...values, _id: food._id }));
-    handleClose();
+    console.log(values);
+    // dispatch(updateFood({ ...values, _id: food._id }));
+    // handleClose();
   };
 
   const initialValues = {
@@ -61,11 +63,47 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
+    setError,
+    clearErrors,
   } = useForm({
     defaultValues: initialValues,
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+
+  const [term, setTerm] = useState('');
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [term]);
+
+  useEffect(() => {
+    const data = { query: term };
+    const headers = {
+      'x-app-key': 'c170d466a095d2a40720b9c98cbe8a21',
+      'x-app-id': '603ff044',
+    };
+    const search = async () => {
+      const response: AxiosResponse = await axios.post(
+        'https://trackapi.nutritionix.com/v2/search/instant',
+        data,
+        { headers }
+      );
+
+      // @ts-ignore: Unreachable code error
+      setResults(response.data.branded as []);
+    };
+    if (term !== '') search();
+  }, [debouncedTerm]);
 
   return (
     <Modal
@@ -79,14 +117,54 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
           Update Food
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <StyledTextField
-            {...register('name')}
-            label="Name"
-            variant="outlined"
-            fullWidth
-            error={!!errors.name}
-            helperText={errors.name && errors?.name?.message}
+          <Controller
+            name="name"
+            control={control}
+            render={(field) => (
+              <Autocomplete
+                {...field}
+                disablePortal
+                id="combo-box-demo"
+                options={results.map((result: any) => result?.food_name)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Name"
+                    value={term}
+                    onChange={(e: any) => {
+                      setTerm(e.target.value);
+                      setValue('name', e.target.value);
+                    }}
+                    error={!!errors.name}
+                    helperText={errors.name && errors?.name?.message}
+                    required
+                  />
+                )}
+                freeSolo
+                onInputChange={(event, value) => {
+                  setValue('name', value);
+                  if (value === '') {
+                    setError('name', {
+                      type: 'manual',
+                      message: 'name is require!',
+                    });
+                  } else {
+                    clearErrors(['name']);
+                  }
+                  const food = results.find(
+                    (result: any) => result?.food_name === value
+                  );
+                  if (food) {
+                    // @ts-ignore: Unreachable code error
+                    setValue('calories', food?.nf_calories);
+                    clearErrors(['calories']);
+                  }
+                  return value;
+                }}
+              />
+            )}
           />
+
           <StyledTextField
             {...register('calories')}
             label="Calories"
