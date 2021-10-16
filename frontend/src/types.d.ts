@@ -4,3 +4,7 @@ interface Food {
   calories: number;
   date: Date;
 } 
+
+interface NutritionixResponse {
+  branded: []
+}
