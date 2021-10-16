@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsNotEmpty,
@@ -7,6 +8,7 @@ import {
 
 export class CreateFoodDTO {
   @IsNotEmpty()
+  @Transform(({ value }) => value?.trim())
   name: string;
 
   @IsNotEmpty()

@@ -39,6 +39,11 @@ export class FoodsService {
 
   async listDaysWithExceededCalories(currentUser) {
     return await this.foodsModel.aggregate([
+      {
+        $match: {
+          owner: currentUser._id,
+        },
+      },
       { $group: { _id: '$date', sum: { $sum: '$calories' } } },
       { $match: { sum: { $gt: currentUser.maxCalories } } },
     ]);
