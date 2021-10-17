@@ -47,9 +47,8 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
   const dispatch = useDispatch();
 
   const onSubmit = (values: any) => {
-    console.log(values);
-    // dispatch(updateFood({ ...values, _id: food._id }));
-    // handleClose();
+    dispatch(updateFood({ ...values, _id: food._id }));
+    handleClose();
   };
 
   const initialValues = {
@@ -126,14 +125,15 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
                 disablePortal
                 id="combo-box-demo"
                 options={results.map((result: any) => result?.food_name)}
+                defaultValue={food.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Name"
                     value={term}
                     onChange={(e: any) => {
-                      setTerm(e.target.value);
-                      setValue('name', e.target.value);
+                      setTerm(e.target.value.trim());
+                      setValue('name', e.target.value.trim());
                     }}
                     error={!!errors.name}
                     helperText={errors.name && errors?.name?.message}
@@ -181,6 +181,7 @@ const UpdateFoodPopUp: FC<UpdateFoodPopUpProps> = ({
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePickerWrapper>
                   <DatePicker
+                    inputFormat="dd/MM/yyyy"
                     {...field}
                     label="Birth Date"
                     renderInput={(params) => (

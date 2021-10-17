@@ -107,9 +107,11 @@ const CreateFood: FC = () => {
                   label="Name"
                   value={term}
                   onChange={(e: any) => {
-                    setTerm(e.target.value);
-                    setValue('name', e.target.value);
+                    setTerm((term) => e.target.value.trim());
+                    setValue('name', e.target.value.trim());
+                    console.log(`'${e.target.value.trim()}'`);
                   }}
+                  onBlur={(e: any) => setValue('name', e.target.value.trim())}
                   error={!!errors.name}
                   helperText={errors.name && errors?.name?.message}
                   required
@@ -132,7 +134,7 @@ const CreateFood: FC = () => {
                 if (food) {
                   // @ts-ignore: Unreachable code error
                   setValue('calories', food?.nf_calories);
-                  clearErrors(['calories'])
+                  clearErrors(['calories']);
                 }
                 return value;
               }}
@@ -147,6 +149,7 @@ const CreateFood: FC = () => {
           type="number"
           error={!!errors.calories}
           helperText={errors.calories && errors?.calories?.message}
+          required
         />
 
         <Controller
@@ -156,6 +159,7 @@ const CreateFood: FC = () => {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePickerWrapper>
                 <DatePicker
+                  inputFormat="dd/MM/yyyy"
                   {...field}
                   label="Date"
                   renderInput={(params) => (
@@ -164,6 +168,7 @@ const CreateFood: FC = () => {
                       {...params}
                       error={!!errors.date}
                       helperText={errors.date && errors?.date?.message}
+                      required
                     />
                   )}
                 />
